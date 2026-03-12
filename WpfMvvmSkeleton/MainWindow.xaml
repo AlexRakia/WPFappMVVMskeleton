@@ -1,0 +1,93 @@
+<Window x:Class="WpfMvvmSkeleton.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="WPF MVVM Skeleton" Height="600" Width="900"
+        WindowStartupLocation="CenterScreen">
+
+    <!--
+        THE VIEW'S ONLY JOB:
+          • Bind controls to ViewModel properties
+          • Bind buttons to ViewModel commands
+          • Never manipulate data directly
+    -->
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>   <!-- toolbar -->
+            <RowDefinition Height="Auto"/>   <!-- search   -->
+            <RowDefinition Height="*"/>      <!-- list     -->
+            <RowDefinition Height="Auto"/>   <!-- status   -->
+        </Grid.RowDefinitions>
+
+        <!-- ── Toolbar ── -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
+
+            <!-- Command binding — no Click handler in code-behind -->
+            <Button Content="🔄  Load"
+                    Command="{Binding LoadItemsCommand}"
+                    Padding="12,6" Margin="0,0,8,0"/>
+
+            <Button Content="💾  Save"
+                    Command="{Binding SaveItemCommand}"
+                    Padding="12,6" Margin="0,0,8,0"/>
+
+            <!-- CanExecute on SaveItemCommand / DeleteItemCommand returns false
+                 when nothing is selected — WPF disables the button automatically -->
+            <Button Content="🗑  Delete"
+                    Command="{Binding DeleteItemCommand}"
+                    Padding="12,6"/>
+
+            <!-- Busy spinner — visible only while IsBusy = true -->
+            <TextBlock Text="  ⏳ Working…"
+                       VerticalAlignment="Center"
+                       FontStyle="Italic"
+                       Foreground="Gray"
+                       Visibility="{Binding IsBusy,
+                                    Converter={StaticResource BoolToVisibilityConverter}}"/>
+        </StackPanel>
+
+        <!-- ── Search bar ── -->
+        <Grid Grid.Row="1" Margin="0,0,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Search: "
+                       VerticalAlignment="Center" Margin="0,0,6,0"/>
+            <TextBox   Grid.Column="1"
+                       Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                       Padding="6,4"/>
+        </Grid>
+
+        <!-- ── Item list ── -->
+        <ListBox Grid.Row="2"
+                 ItemsSource="{Binding Items}"
+                 SelectedItem="{Binding SelectedItem}"
+                 Margin="0,0,0,10">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <!-- Each row's DataContext is automatically one SampleItem -->
+                    <StackPanel Orientation="Horizontal" Margin="4">
+                        <TextBlock Text="{Binding Id}"   Width="40" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding Name}" Width="160"/>
+                        <TextBlock Text="{Binding Description}" Foreground="Gray"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <!-- ── Status bar ── -->
+        <Border Grid.Row="3" BorderThickness="0,1,0,0" BorderBrush="LightGray" Padding="0,6,0,0">
+            <Grid>
+                <TextBlock Text="{Binding StatusMessage}"
+                           VerticalAlignment="Center" Foreground="Gray"/>
+                <Button Content="✕"
+                        Command="{Binding ClearStatusCommand}"
+                        HorizontalAlignment="Right"
+                        Background="Transparent" BorderThickness="0"
+                        Cursor="Hand" Padding="4,0"/>
+            </Grid>
+        </Border>
+
+    </Grid>
+</Window>

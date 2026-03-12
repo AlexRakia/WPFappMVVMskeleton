@@ -1,0 +1,16 @@
+<Application x:Class="WpfMvvmSkeleton.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:WpfMvvmSkeleton"
+             StartupUri="Views/MainWindow.xaml">
+    <Application.Resources>
+
+        <!--
+            Global converters — available to every View in the app.
+            Add styles, brushes, and data templates here as the app grows.
+        -->
+
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+
+    </Application.Resources>
+</Application>
